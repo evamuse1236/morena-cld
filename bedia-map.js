@@ -1,0 +1,52 @@
+MAPS.bedia = {
+    title: "How stigma traps some Bedia households",
+    subtitle: "A separate, smaller loop about one community in Morena.",
+    viewBox: "0 50 1000 500", mViewBox: "0 25 420 545",
+    nodes: {
+      G: { x: 500, y: 95, m: [210, 70], loop: "r3", label: ["Stigma against", "the community"], name: "Stigma against the community", short: "stigma against the community",
+        means: "Prejudice and unfair treatment towards Bedia people, linked to their caste and to the work some women do.",
+        stat: null, statNote: "No survey measures discrimination against Bedia people.",
+        extra: "The Bedia are a community in Morena and nearby districts. In some Bedia families, unmarried daughters and sisters have done sex work to support the household, while wives do not. Anuja Agrawal, who studied the community, warns that this does not describe every Bedia family.{13}" },
+      H: { x: 820, y: 300, m: [330, 300], loop: "r3", label: ["Few other jobs,", "for women and men"], name: "Few other jobs, for women and men", short: "few other jobs",
+        means: "How hard it is for people from these households to find other kinds of work.",
+        stat: null, statNote: "Morena’s overall job figures don’t tell us about Bedia households specifically." },
+      I: { x: 500, y: 505, m: [210, 530], loop: "r3", label: ["Families rely on women’s", "sex-work income"], name: "Families rely on women’s sex-work income", short: "families relying on women’s sex-work income",
+        means: "How much a household depends on money earned by its women through sex work.",
+        stat: { big: "3,279", text: "Bedia people were counted in Morena district in the 2011 Census.{14}" },
+        caveat: "This is only how many Bedia people live in the district. It says nothing about how many families rely on sex work." },
+      J: { x: 180, y: 300, m: [90, 300], loop: "r3", label: ["Pressure to keep", "doing sex work"], name: "Pressure to keep doing sex work", short: "pressure to keep doing sex work",
+        means: "Pressure, often from money worries, for women to continue the work.",
+        stat: null, statNote: "No current figures exist; the evidence is first-hand accounts.",
+        caveat: "Adult sex work, being forced into sex work, and the sexual exploitation of children are different things and must not be mixed up." }
+    },
+    loops: [
+      { id: "r3", x: 500, y: 300, m: [210, 300], mdir: 1, name: "Stigma", dir: 1, order: ["b1", "b2", "b3", "b4"],
+        story: ["Stigma shuts people out of other jobs. With few other jobs, families rely on women’s earnings from sex work. That reliance creates pressure to keep going, and continuing keeps the stigma alive.",
+                "This loop comes from a 2020 first-hand account by a Bedia social worker{12} and a 2008 study of the community.{13} It covers some households, not the whole community."] }
+    ],
+    edges: [
+      { id: "b1", from: "G", to: "H", sign: "+", loop: "r3", solid: true,
+        claim: "Stigma shuts people out of other jobs.",
+        found: ["Rohini Chhari, a social worker who is herself from the Bedia community, wrote in 2020:",
+                "> Due to the stigma associated with their work, who will give them any jobs? Even the men from this community have been unable to get proper jobs because of the stigma attached to the work that the women do.{12}",
+                "In her 2008 study, sociologist Anuja Agrawal recorded that Bedia people in Morena who looked for other work were mocked and treated unfairly.{13}"],
+        how: ["interviews", "First-hand account, 2020, and a 2008 study"],
+        caveat: "These are accounts from people who know the community well, not a survey." },
+      { id: "b2", from: "H", to: "I", sign: "+", loop: "r3", solid: true,
+        claim: "With few other jobs, families depend more on women’s sex-work income.",
+        found: ["Chhari described the families she works with:",
+                "> Most families in this community are dependent on the income of women in their families for their survival.{12}"],
+        how: ["interviews", "First-hand account, 2020"],
+        caveat: "This describes the families Chhari works with, not every Bedia household." },
+      { id: "b3", from: "I", to: "J", sign: "+", loop: "r3", solid: true,
+        claim: "Depending on this income creates pressure to keep doing the work.",
+        found: ["When the 2020 COVID lockdown stopped this work, Chhari reported that households faced serious hardship and pressure to start again as soon as restrictions eased.{12}"],
+        how: ["interviews", "First-hand account, 2020"],
+        caveat: "Adult sex work, being forced into sex work, and the sexual exploitation of children are different things and must not be mixed up." },
+      { id: "b4", from: "J", to: "G", sign: "+", loop: "r3", solid: false,
+        claim: "Continuing the work keeps the community exposed to stigma.",
+        found: ["This arrow closes the loop. It is our explanation, based on the two sources. Agrawal’s accounts from Morena show the stigma follows people even when they try other work.{13}"],
+        how: ["explanation", "Our explanation"],
+        caveat: "This does not mean women cause the prejudice against them. The stigma is about caste as well as work, and it can stay even after people change jobs." }
+    ]
+  };
