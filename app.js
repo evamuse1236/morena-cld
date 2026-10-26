@@ -24,15 +24,29 @@ const inBox = (p, b, pad) => Math.abs(p.x - b.x) <= b.w / 2 + pad && Math.abs(p.
 
 /* ---------- Draw ---------- */
 const narrow = matchMedia("(width < 640px)");
+let showSchemes = false;
+// remember each layout's original desktop coordinates
+for (const M of Object.values(MAPS)) for (const part of [M, M.schemes].filter(Boolean)) {
+  Object.values(part.nodes).forEach(n => n.d = [n.x, n.y]);
+  part.loops.forEach(l => l.d = [l.x, l.y, l.dir]);
+}
+// the map currently on screen: the base loops, plus the scheme loops if switched on
+function view() {
+  const M = MAPS[current];
+  if (!(showSchemes && M.schemes)) return M;
+  const S = M.schemes;
+  return { ...M, subtitle: S.subtitle, viewBox: S.viewBox, mViewBox: S.mViewBox, moveMobile: S.moveMobile, moveMobileLoops: S.moveMobileLoops,
+    nodes: { ...M.nodes, ...S.nodes }, loops: [...M.loops, ...S.loops], edges: [...M.edges, ...S.edges] };
+}
 function draw() {
-  const M = MAPS[current], mob = narrow.matches;
-  for (const n of Object.values(M.nodes)) { [n.x, n.y] = mob ? n.m : (n.d ||= [n.x, n.y]); }
-  for (const l of M.loops) { l.d ||= [l.x, l.y, l.dir]; [l.x, l.y, l.dir] = mob ? [...l.m, l.mdir] : l.d; }
+  const M = view(), mob = narrow.matches, mv = M.moveMobile || {}, ml = M.moveMobileLoops || {};
+  for (const [id, n] of Object.entries(M.nodes)) [n.x, n.y] = mob ? (mv[id] || n.m) : n.d;
+  for (const l of M.loops) [l.x, l.y, l.dir] = mob ? (ml[l.id] || [...l.m, l.mdir]) : l.d;
   svg.innerHTML = "";
   svg.setAttribute("aria-label", M.title);
   svg.setAttribute("viewBox", mob ? M.mViewBox : M.viewBox);
   const defs = el("defs", {}, svg);
-  ["r1", "r2", "r3"].forEach(id => {
+  ["r1", "r2", "r3", "b1", "b2"].forEach(id => {
     const m = el("marker", { id: "ah-" + id, viewBox: "0 0 10 10", refX: "8", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse", markerUnits: "userSpaceOnUse" }, defs);
     m.setAttribute("markerWidth", "16"); m.setAttribute("markerHeight", "16");
     el("path", { d: "M0,0 L10,5 L0,10 z", style: `fill:${LOOPCOLOR[id]}` }, m);
@@ -54,8 +68,9 @@ function draw() {
     const p0 = { x: a.x, y: a.y }, p2 = { x: b.x, y: b.y };
     const mid = lerp(p0, p2, 0.5), dx = p2.x - p0.x, dy = p2.y - p0.y, len = Math.hypot(dx, dy);
     let nx = -dy / len, ny = dx / len;
-    if ((mid.x - loop.x) * nx + (mid.y - loop.y) * ny < 0) { nx = -nx; ny = -ny; }
-    const bend = len * 0.2;
+    // two-box loops bend to their own side so the pair forms an oval; others bow away from the loop centre
+    if (!e.pair && (mid.x - loop.x) * nx + (mid.y - loop.y) * ny < 0) { nx = -nx; ny = -ny; }
+    const bend = len * (e.pair ? 0.42 : 0.2);
     const p1 = { x: mid.x + nx * bend, y: mid.y + ny * bend };
     let t0 = 0, t1 = 1;
     for (let t = 0; t <= 1; t += 0.005) if (inBox(qpt(p0, p1, p2, t), a, 8)) t0 = t;
@@ -89,15 +104,14 @@ function draw() {
     const ps = pt(a0), pe = pt(a1);
     el("path", { d: `M${ps.x},${ps.y} A${r},${r} 0 1 ${l.dir > 0 ? 1 : 0} ${pe.x},${pe.y}`, fill: "none", style: `stroke:${col}`, "stroke-width": 2, "marker-end": `url(#ah-${l.id})` }, g);
     const t = el("text", { class: "lid", x: l.x, y: l.y - 8, style: `fill:${col}` }, g);
-    t.textContent = "R" + (l.id === "r3" ? "" : l.id.slice(1));
-    const n = el("text", { class: "lname", x: l.x, y: l.y + 38 }, g);
-    n.textContent = l.name;
+    t.textContent = l.tag;
+    if (l.kind !== "B") el("text", { class: "lname", x: l.x, y: l.y + 38 }, g).textContent = l.name;
   });
 
   // nodes
   for (const [id, n] of Object.entries(M.nodes)) {
     const b = geo[id];
-    const g = el("g", { class: `node dimmable ${n.hub ? "hub" : ""}`, tabindex: "0", role: "button", "data-node": id, "aria-label": `${n.name}: see details` }, gNodes);
+    const g = el("g", { class: `node dimmable ${n.hub ? "hub" : ""} ${n.kind || ""}`, tabindex: "0", role: "button", "data-node": id, "aria-label": `${n.name}: see details` }, gNodes);
     el("rect", { x: b.x - b.w / 2, y: b.y - b.h / 2, width: b.w, height: b.h, rx: n.hub ? 18 : 12 }, g);
     const lh = n.hub ? 22 : 20;
     n.label.forEach((line, i) => {
@@ -129,10 +143,10 @@ function closePanel() {
   $("#hint").style.visibility = "";
 }
 
-const loopLabel = id => { const l = MAPS[current].loops.find(x => x.id === id); return l ? l.name.toLowerCase() + " loop" : "both loops"; };
+const loopLabel = id => { const l = view().loops.find(x => x.id === id); return l ? l.name.toLowerCase() + " loop" : "both loops"; };
 
 function showEdge(id) {
-  const M = MAPS[current], e = M.edges.find(x => x.id === id), loop = M.loops.find(l => l.id === e.loop);
+  const M = view(), e = M.edges.find(x => x.id === id), loop = M.loops.find(l => l.id === e.loop);
   const i = loop.order.indexOf(id), A = M.nodes[e.from], B = M.nodes[e.to];
   selected = { type: "edge", id };
   highlight([`[data-id="${id}"]`, `[data-node="${e.from}"]`, `[data-node="${e.to}"]`]);
@@ -154,16 +168,16 @@ function showEdge(id) {
 }
 
 function showNode(id) {
-  const M = MAPS[current], n = M.nodes[id];
+  const M = view(), n = M.nodes[id];
   selected = { type: "node", id };
   const touching = M.edges.filter(e => e.from === id || e.to === id);
   highlight([`[data-node="${id}"]`, ...touching.map(e => `[data-id="${e.id}"]`), ...touching.map(e => `[data-node="${e.from === id ? e.to : e.from}"]`)]);
   svg.querySelector(`[data-node="${id}"]`).classList.add("sel");
   const col = LOOPCOLOR[n.loop];
   let bars = "";
-  if (n.bars) bars = `<div class="bars">${n.bars.map(([l, v, s]) => `<div class="bar"><span>${l}${fn(s)}</span><span><i style="--w:${v / n.barMax * 100}%"></i></span><span>${v}${n.unit}</span></div>`).join("")}</div>`;
+  if (n.bars) bars = `<div class="bars">${n.bars.map(([l, v, s]) => `<div class="bar"><span>${l}${fn(s)}</span><span><i style="--w:${v / n.barMax * 100}%"></i></span><span>${n.money ? "₹" + v.toLocaleString("en-IN") : v + n.unit}</span></div>`).join("")}</div>`;
   open(`
-    <p class="kicker" style="--c:${col}"><i></i>${n.loop === "both" ? "Factor in both loops" : "Factor in the " + loopLabel(n.loop)}</p>
+    <p class="kicker" style="--c:${col}"><i></i>${n.kind === "scheme" ? "Government scheme" : n.loop === "both" ? "Factor in both loops" : "Factor in the " + loopLabel(n.loop)}</p>
     <h2>${n.name}</h2>
     <p>${fn(n.means)}</p>
     ${n.hubNote ? `<p class="rule">${n.hubNote}</p>` : ""}
@@ -177,13 +191,13 @@ function showNode(id) {
 }
 
 function showLoop(id) {
-  const M = MAPS[current], l = M.loops.find(x => x.id === id);
+  const M = view(), l = M.loops.find(x => x.id === id);
   selected = { type: "loop", id };
   const es = M.edges.filter(e => e.loop === id);
   highlight([`[data-loop="${id}"]`, ...es.map(e => `[data-id="${e.id}"]`), ...es.map(e => `[data-node="${e.from}"]`)]);
   const col = LOOPCOLOR[id];
   open(`
-    <p class="kicker" style="--c:${col}"><i></i>A loop that feeds itself</p>
+    <p class="kicker" style="--c:${col}"><i></i>${l.kind === "B" ? "A balancing loop: it pushes back" : "A loop that feeds itself"}</p>
     <h2>The ${l.name.toLowerCase()} loop</h2>
     <div class="found">${paras(l.story)}</div>
     <nav class="pnav"><span></span><button type="button" data-go="${l.order[0]}">Walk through it, step by step</button></nav>`, col);
@@ -193,10 +207,11 @@ function showLoop(id) {
 function buildEvidenceList() {
   const out = [];
   for (const [key, M] of Object.entries(MAPS)) {
-    M.loops.forEach(l => {
-      out.push(`<h3 style="--c:${LOOPCOLOR[l.id]}"><i></i>${key === "bedia" ? "Bedia households: " : ""}${l.name} loop</h3><p>${fn(l.story[0])}</p>`);
+    const loops = [...M.loops, ...(M.schemes ? M.schemes.loops : [])], edges = [...M.edges, ...(M.schemes ? M.schemes.edges : [])];
+    loops.forEach(l => {
+      out.push(`<h3 style="--c:${LOOPCOLOR[l.id]}"><i></i>${key === "bedia" ? "Bedia households: " : ""}${l.tag} ${l.name} loop${l.kind === "B" ? " (balancing)" : ""}</h3><p>${fn(l.story[0])}</p>`);
       l.order.forEach((eid, i) => {
-        const e = M.edges.find(x => x.id === eid);
+        const e = edges.find(x => x.id === eid);
         out.push(`<div class="ev" style="--c:${LOOPCOLOR[l.id]}"><h4>${i + 1}. ${fn(e.claim)}</h4>${paras(e.found)}<p class="how">How we know: <span class="tag ${e.how[0]}">${e.how[1]}</span></p><p class="caveat"><b>Keep in mind:</b> ${fn(e.caveat)}</p></div>`);
       });
     });
@@ -232,8 +247,18 @@ document.querySelectorAll(".switch button").forEach(b => b.addEventListener("cli
   $("#title").textContent = MAPS[current].title;
   $("#subtitle").textContent = MAPS[current].subtitle;
   $("#bediaNote").hidden = current !== "bedia";
-  closePanel(); draw();
+  syncSchemes();
 }));
+function syncSchemes() {
+  const has = !!MAPS[current].schemes, on = has && showSchemes, t = $("#schemeToggle");
+  t.hidden = !has;
+  t.setAttribute("aria-pressed", on);
+  t.textContent = on ? "Hide government schemes" : "Show government schemes";
+  $("#legB").hidden = !on;
+  $("#subtitle").textContent = view().subtitle;
+  closePanel(); draw();
+}
+$("#schemeToggle").addEventListener("click", () => { showSchemes = !showSchemes; syncSchemes(); });
 
 /* Hover tooltip: one-line preview */
 const hoverable = matchMedia("(hover: hover) and (pointer: fine)");
@@ -242,7 +267,7 @@ svg.addEventListener("pointermove", e => {
   if (!hoverable.matches) return;
   const g = e.target.closest(".edge, .node, .loopmark");
   if (!g) return hideTip();
-  const M = MAPS[current];
+  const M = view();
   let text;
   if (g.dataset.id) text = plain(M.edges.find(x => x.id === g.dataset.id).claim);
   else if (g.dataset.node) text = M.nodes[g.dataset.node].name;
@@ -271,9 +296,11 @@ draw();
   const h = location.hash.slice(1);
   if (!h) return;
   if (h.startsWith("bedia")) document.querySelector('[data-map="bedia"]').click();
-  const k = h.replace(/^bedia-?/, "");
+  if (h.startsWith("schemes")) { showSchemes = true; syncSchemes(); }
+  const k = h.replace(/^(bedia|schemes)-?/, "");
   if (!k) return;
   if (k.startsWith("n-")) showNode(k.slice(2));
+  else if (k.startsWith("loop-")) showLoop(k.slice(5));
   else if (k.startsWith("r")) showLoop(k);
   else showEdge(k);
 })();

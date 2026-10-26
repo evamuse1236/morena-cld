@@ -36,10 +36,10 @@ const MAPS = {
         extra: "The experiment in Morena and three nearby districts showed that how wages are paid matters: women whose wages went straight into their own account worked more than women who only had an account.{8}" }
     },
     loops: [
-      { id: "r1", x: 318, y: 300, m: [210, 185], mdir: 1, name: "Early marriage", dir: -1, order: ["e1", "e2", "e3"],
+      { id: "r1", tag: "R1", x: 318, y: 300, m: [210, 185], mdir: 1, name: "Early marriage", dir: -1, order: ["e1", "e2", "e3"],
         story: ["When families expect girls to marry young, many do. Girls who marry young tend to have little say in decisions at home. With little say, women find it hard to push back when their own daughters’ marriages are planned, so the expectation carries on to the next generation.",
                 "This loop comes mainly from one 2009 study based on interviews in Morena, Bhind and Gwalior.{1} No study has measured the whole loop over time."] },
-      { id: "r2", x: 712, y: 300, m: [210, 640], mdir: -1, name: "Work and money", dir: 1, order: ["e4", "e5", "e6", "e7"],
+      { id: "r2", tag: "R2", x: 712, y: 300, m: [210, 640], mdir: -1, name: "Work and money", dir: 1, order: ["e4", "e5", "e6", "e7"],
         story: ["Many families limit whether women can work outside the home. Fewer women working means fewer women with money of their own. Without control over money, women have less say, so the limits stay in place.",
                 "An experiment in Morena and three nearby districts broke into this loop by paying women’s wages into their own bank accounts. Those women went on to work more.{8} The steps in between are the researchers’ explanation."] }
     ],

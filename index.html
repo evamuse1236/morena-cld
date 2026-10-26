@@ -17,22 +17,26 @@
       <h1 id="title">How gender inequality keeps itself going in Morena</h1>
       <p id="subtitle">Two loops share one link: how much say women have at home.</p>
     </div>
-    <div class="switch" role="group" aria-label="Choose a map">
-      <button type="button" data-map="main" aria-pressed="true">Women in Morena</button>
-      <button type="button" data-map="bedia" aria-pressed="false">Bedia households</button>
+    <div class="controls">
+      <div class="switch" role="group" aria-label="Choose a map">
+        <button type="button" data-map="main" aria-pressed="true">Women in Morena</button>
+        <button type="button" data-map="bedia" aria-pressed="false">Bedia households</button>
+      </div>
+      <button type="button" class="toggle" id="schemeToggle" aria-pressed="false">Show government schemes</button>
     </div>
   </header>
 
   <div class="stage" id="stage">
     <div class="map">
       <svg id="svg" viewBox="0 0 1000 600" role="img" aria-labelledby="title"></svg>
-      <p class="bedia-note" id="bediaNote" hidden>This map covers some Bedia households described by two sources. It does not describe every Bedia family, or Morena as a whole.</p>
+      <p class="bedia-note" id="bediaNote" hidden>This map covers some Bedia households described by two sources. It does not describe every Bedia family, or Morena as a whole. We haven’t found a government scheme with evidence against this loop, so it has no balancing loop yet.</p>
       <ul class="legend" aria-label="How to read the map">
         <li><svg width="24" height="24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-weight="700" font-size="15" fill="currentColor">+</text></svg>more leads to more</li>
         <li><svg width="24" height="24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-weight="700" font-size="15" fill="currentColor">−</text></svg>more leads to less</li>
         <li><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="32" y2="5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>a study saw this directly</li>
         <li><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="32" y2="5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7"/></svg>a likely explanation, not tested directly</li>
         <li><strong>R</strong>&nbsp;a loop that feeds itself</li>
+        <li id="legB" hidden><strong style="color:var(--b)">B</strong>&nbsp;a loop that pushes back</li>
       </ul>
       <p class="intro-note" id="hint">Tap any arrow or box to see the evidence.</p>
     </div>
@@ -67,6 +71,8 @@
           <li><b>Whether the early marriage loop still works the same way.</b> The main study is from 2009.</li>
           <li><b>Whether giving women more say lowers early marriage for their daughters.</b> The map suggests it would, but nobody has tested it.</li>
           <li><b>How common violence against women is in Morena.</b> There is a state figure (28.1% of married women in Madhya Pradesh reported violence by their husband, NFHS-5<sup><a href="#src-3">3</a></sup>), but no reliable figure for the district alone.</li>
+          <li><b>Whether the schemes work in Morena.</b> No study has measured how much Ladli Laxmi or Beti Bachao Beti Padhao lowered early marriage in the district.</li>
+          <li><b>Whether any scheme helps Bedia households</b> find other work or face less stigma.</li>
           <li><b>Other reasons women don't do paid work</b>, such as few local jobs, housework and childcare, or unsafe travel. The map doesn't separate these out.</li>
         </ul>
         <p style="margin-block-end:0.3rem"><b>Good questions to ask people in Morena:</b></p>
@@ -90,6 +96,7 @@
 
 <script src="sources.js"></script>
 <script src="main-map.js"></script>
+<script src="schemes.js"></script>
 <script src="bedia-map.js"></script>
 <script src="app.js"></script>
 </body>

@@ -20,7 +20,7 @@ MAPS.bedia = {
         caveat: "Adult sex work, being forced into sex work, and the sexual exploitation of children are different things and must not be mixed up." }
     },
     loops: [
-      { id: "r3", x: 500, y: 300, m: [210, 300], mdir: 1, name: "Stigma", dir: 1, order: ["b1", "b2", "b3", "b4"],
+      { id: "r3", tag: "R", x: 500, y: 300, m: [210, 300], mdir: 1, name: "Stigma", dir: 1, order: ["b1", "b2", "b3", "b4"],
         story: ["Stigma shuts people out of other jobs. With few other jobs, families rely on women’s earnings from sex work. That reliance creates pressure to keep going, and continuing keeps the stigma alive.",
                 "This loop comes from a 2020 first-hand account by a Bedia social worker{12} and a 2008 study of the community.{13} It covers some households, not the whole community."] }
     ],

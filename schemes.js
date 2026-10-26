@@ -1,0 +1,51 @@
+MAPS.main.schemes = {
+      subtitle: "Orange boxes are government schemes. Each makes a balancing loop (B) that pushes back.",
+      viewBox: "0 75 1000 680", mViewBox: "0 -195 420 1140",
+      moveMobile: { E: [110, 820], F: [320, 620] },
+      moveMobileLoops: { r2: [160, 625, -1] },
+      nodes: {
+        S1: { x: 215, y: 700, m: [320, -150], loop: "b1", kind: "scheme", label: ["Ladli Laxmi &", "Beti Bachao Beti Padhao"], name: "Ladli Laxmi and Beti Bachao Beti Padhao", short: "government schemes for girls",
+          means: "Two government schemes for girls. Ladli Laxmi (Madhya Pradesh, since 2007) pays girls in stages as they stay in school.{15} Beti Bachao Beti Padhao (India, since 2015) runs campaigns against sex selection and child marriage, and helps girls stay in school.{16}",
+          stat: { big: "₹1,00,000", text: "is paid to a girl at age 21 under Ladli Laxmi, but only if she did not marry before 18 and sat her Class 12 exams.{15}" },
+          bars: [["Class 6", 2000, ""], ["Class 9", 4000, ""], ["Class 11", 6000, ""], ["Class 12", 6000, ""], ["Age 21", 100000, "{15}"]], barMax: 100000, money: true,
+          extra: "There is also ₹25,000 towards college, and monthly support in Classes 11 and 12.{15} A third scheme, Kanya Vivah Sahayata, gives poor families about ₹55,000 towards a daughter’s wedding.{18} We left it off the map. It helps pay for legal-age weddings, but it rewards getting married rather than waiting, so it may push back only weakly, if at all.",
+          caveat: "How many eligible families in Morena actually receive the money, and how carefully the rules are checked, varies." },
+        S2: { x: 720, y: 700, m: [320, 900], loop: "b2", kind: "scheme", label: ["Wages paid into", "women’s own accounts"], name: "Wages paid into women’s own accounts", short: "wages paid into women’s own accounts",
+          means: "Wages from MGNREGA, the government’s rural jobs scheme, sent straight into a woman’s own bank account instead of to the head of the household.{19}",
+          stat: null, statNote: "We don’t have a figure for how many Morena women are paid this way.",
+          extra: "Two other schemes also put money in women’s hands. Ladli Behna sends monthly cash into women’s own accounts, and self-help groups under the rural livelihoods mission help women save and borrow together.{20} There is less evidence that these change who makes decisions at home, so we haven’t drawn them." }
+      },
+      loops: [
+        { id: "b1", tag: "B1", kind: "B", x: 215, y: 598, m: [320, -32], mdir: 1, dir: -1, name: "Schemes for girls", order: ["s1", "s2"],
+          story: ["When many girls marry young, the government steps in with schemes like Ladli Laxmi and Beti Bachao Beti Padhao. If the schemes work, fewer girls marry young. This is a balancing loop: instead of feeding the early marriage loop, it pushes against it.",
+                  "The scheme rules are clear, and early marriage in Madhya Pradesh has fallen, but no study has measured how much these schemes caused the fall in Morena."] },
+        { id: "b2", tag: "B2", kind: "B", x: 720, y: 598, m: [320, 768], mdir: -1, dir: -1, name: "Wages to women", order: ["s3", "s4"],
+          story: ["When women don’t control their own pay, the government can change how wages are paid, sending them straight into women’s own bank accounts. That gives women more control over their pay, which pushes against the work and money loop.",
+                  "This is the best-tested part of the whole map: an experiment in Morena and three nearby districts tried exactly this.{8}"] }
+      ],
+      edges: [
+        { id: "s1", from: "B", to: "S1", sign: "+", loop: "b1", solid: false, pair: true,
+          claim: "When many girls marry young, the government steps in.",
+          found: ["Madhya Pradesh started Ladli Laxmi in 2007, for girls born on or after 1 January 2006.{15} The national Beti Bachao Beti Padhao scheme began in 2015. It targets the falling number of girls compared with boys, girls’ safety and girls’ schooling, and it runs in every district of Madhya Pradesh, including Morena.{16}"],
+          how: ["explanation", "Our explanation of why the schemes exist"],
+          caveat: "Governments don’t react to numbers automatically, or quickly. This arrow just means that when a problem is visible and serious, there is pressure to act." },
+        { id: "s2", from: "S1", to: "B", sign: "-", loop: "b1", solid: false, pair: true,
+          claim: "The schemes make waiting until 18 worth it, so fewer girls marry young.",
+          found: ["Ladli Laxmi pays a girl in stages as she stays in school: ₹2,000 at Class 6, ₹4,000 at Class 9, ₹6,000 each at Classes 11 and 12, and ₹1,00,000 at age 21. The last and biggest payment only comes if she did not marry before 18 and sat her Class 12 exams.{15}",
+                  "That works directly against what PAIRVI heard in 2009: that once a girl leaves school, marriage is seen as the only option.{1} Beti Bachao Beti Padhao adds campaigns against child marriage and support for girls’ schooling.{16}",
+                  "Between NFHS-4 (2015–16) and NFHS-5 (2019–21), early marriage in Madhya Pradesh fell from about 32.4% to 23.1%.{17}{3} Across India it fell less, from 26.8% to 23.3%.{4}"],
+          how: ["explanation", "Scheme rules plus a falling state trend; not tested"],
+          caveat: "Other things changed at the same time, such as more schools and more awareness, so we can’t tell how much of the fall the schemes caused. Nobody has measured their effect in Morena itself." },
+        { id: "s3", from: "F", to: "S2", sign: "-", loop: "b2", solid: false, pair: true,
+          claim: "When women don’t control their own pay, the government acts to change how wages are paid.",
+          found: ["Under MGNREGA, policy has long aimed to pay each worker into their own bank account. Madhya Pradesh has taken further steps to send more wages into women’s own accounts.{19}"],
+          how: ["explanation", "Our explanation of why the policy exists"],
+          caveat: "This arrow explains why the policy exists. It doesn’t mean the government tracks this closely." },
+        { id: "s4", from: "S2", to: "F", sign: "+", loop: "b2", solid: true, pair: true,
+          claim: "Paying wages into women’s own accounts gives them more control over their pay.",
+          found: ["This is the step the 2013–17 experiment tested. In Gwalior, Morena, Shivpuri and Sheopur, some women had their MGNREGA wages paid straight into a bank account in their own name and were trained to use it. Others only got the account.{8}",
+                  "Paying wages into her own account is a direct way of giving a woman control. The researchers then measured what happened next: the first group worked more in public and private sector jobs, and became more supportive of women working.{8}"],
+          how: ["experiment", "Experiment, 2013–17, in Morena and 3 nearby districts"],
+          caveat: "The results are for all four districts together, not Morena alone. Husbands’ views didn’t change, and whether a woman really decides how her money is spent still depends on her household." }
+      ]
+    };

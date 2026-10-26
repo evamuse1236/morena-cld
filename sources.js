@@ -14,9 +14,15 @@ const SOURCES = [
   [11, "Hindustan Times (15 Dec 2020). Women from Chambal stitch a success story, turn crisis into opportunity.", "https://www.hindustantimes.com/bhopal/women-from-chambal-stitch-a-success-story-turn-crisis-into-opportunity/story-Qyhy47uAyabVcFqHSkMMoJ.html", "Interviews in Dhurkuda village, Morena."],
   [12, "Chhari, R. (19 May 2020). Women From The Bedia Community In Morena (MP) Suffer Disproportionately As Their Work Halts. BehanBox.", "https://behanbox.com/2020/05/19/women-from-the-bedia-community-in-morena-mp-suffer-disproportionately-as-their-work-halts/", "First-hand account by a social worker from the Bedia community."],
   [13, "Agrawal, A. (2008). Chaste Wives and Prostitute Sisters: Patriarchy and Prostitution among the Bedias of India. Routledge.", "https://www.routledge.com/Chaste-Wives-and-Prostitute-Sisters-Patriarchy-and-Prostitution-among-the-Bedias-of-India/Agrawal/p/book/9780367817657", "Ethnography; Morena passages in Chapter 5, pp. 134–136."],
-  [14, "Census of India 2011, Morena district tables (including table A-10), from the supplied Morena data pack.", "", ""]
+  [14, "Census of India 2011, Morena district tables (including table A-10), from the supplied Morena data pack.", "", ""],
+  [15, "Government of Madhya Pradesh, Women and Child Development Department. Mukhyamantri Ladli Laxmi Yojana (scheme rules, including Ladli Laxmi 2.0).", "https://ladlilaxmi.mp.gov.in", ""],
+  [16, "Ministry of Women and Child Development, Government of India. Beti Bachao Beti Padhao guidelines (2015; now part of Mission Shakti).", "", ""],
+  [17, "National Family Health Survey (NFHS-4), 2015–16, Madhya Pradesh state figures.", "", "Figure as given in the supplied scheme notes; check against the NFHS-4 state fact sheet."],
+  [18, "Government of Madhya Pradesh. Mukhyamantri Kanya Vivah Sahayata Yojana (scheme descriptions and 2026 extension reports).", "", ""],
+  [19, "MGNREGA wage-payment rules, and Madhya Pradesh government reporting on paying wages into women’s own accounts.", "", ""],
+  [20, "Government of Madhya Pradesh. Mukhyamantri Ladli Behna Yojana; DAY-NRLM / MP State Rural Livelihood Mission (scheme descriptions).", "", ""]
 ];
 
 /* ---------- Maps ---------- */
-const LOOPCOLOR = { r1: "var(--r1)", r2: "var(--r2)", r3: "var(--r3)", both: "var(--ink)" };
+const LOOPCOLOR = { r1: "var(--r1)", r2: "var(--r2)", r3: "var(--r3)", b1: "var(--b)", b2: "var(--b)", both: "var(--ink)" };
 
